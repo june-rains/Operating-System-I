@@ -1,0 +1,14 @@
+1. The CPU utilization is 100%, because the calling 2 process are both using CPU, not issues I/O requests
+the results you can run the command ./process.py -l 5:100,5:100 -c -p to see
+
+2. Total time is 11 units, in the initial state, the process0 is in running state, and process1 is in ready state,
+when the process0 finished,(4 units after), the process1 start running, when issues 1 I/O requests(it will use 1 unit time CPU),
+the IO will be busy, and CPU will idle, after IO done(5 units after), it will run the CPU to show IO is done 
+
+3. Total time will change, also the CPU utlization and IO utilization will change accordingly, see the results yourself
+
+4. The results will be the same as the second one
+
+5. The results will be the same as the third one
+
+6/7/8. The results you can run by yourself, and you should analysis the results yourself
