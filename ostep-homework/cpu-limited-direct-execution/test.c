@@ -63,21 +63,23 @@ int main() {
     } else if (rc == 0) {
         // child process
         sched_setaffinity(getpid(), sizeof(cpu_set_t), &cpu_set);
-
+        close(pipefd1[0]);
+        close(pipefd2[1]);
         for(int i = 0; i < loops; i++) {
             // child process(1st process) write to pipefd1, and wait read from pipefd2
-            write(pipefd1[0], NULL, 0);
-            read(pipefd2[1], NULL, 0);
+            write(pipefd1[1], NULL, 0);
+            read(pipefd2[0], NULL, 0);
         }
     } else {
         // parent process
         sched_setaffinity(getpid(), sizeof(cpu_set_t), &cpu_set);
-
+        close(pipefd1[1]);
+        close(pipefd2[0]);
         gettimeofday(&time_before, NULL);
         for(int i = 0; i < loops; i++) {
             // parent process(2nd process) try to read from the pipefd1, and write to the pipefd2
-            read(pipefd1[1], NULL, 0);
-            write(pipefd2[0], NULL, 0);
+            read(pipefd1[0], NULL, 0);
+            write(pipefd2[1], NULL, 0);
         }
         gettimeofday(&time_after, NULL);
         printf("The total time cost of context switch is %f microseconds", (time_after.tv_sec * 1000000 + time_after.tv_usec - time_before.tv_sec * 1000000 - time_before.tv_usec) / (float) loops); 
